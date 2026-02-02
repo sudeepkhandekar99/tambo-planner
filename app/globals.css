@@ -1,27 +1,25 @@
-/* Tailwind v4 entrypoint */
 @import "tailwindcss";
-
-/* Third-party styles */
 @import "react-big-calendar/lib/css/react-big-calendar.css";
+@import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 
-
+/* --- Pastel tokens (warm + calm) --- */
 :root {
-  --background: 96 33% 97%;
+  --background: 92 35% 97%;
   --foreground: 210 15% 18%;
 
-  --card: 96 30% 95%;
+  --card: 92 30% 96%;
   --card-foreground: 210 15% 18%;
 
-  --popover: 96 30% 95%;
+  --popover: 92 30% 96%;
   --popover-foreground: 210 15% 18%;
 
   --primary: 160 65% 72%;
-  --primary-foreground: 210 20% 18%;
+  --primary-foreground: 210 20% 16%;
 
   --secondary: 200 35% 90%;
   --secondary-foreground: 210 20% 18%;
 
-  --muted: 100 25% 92%;
+  --muted: 98 25% 92%;
   --muted-foreground: 210 10% 40%;
 
   --accent: 150 30% 88%;
@@ -42,7 +40,20 @@ body {
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-sans);
+  position: relative;
+}
+
+/* Soft pastel background blobs */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 20%, hsl(var(--primary) / 0.22), transparent 45%),
+    radial-gradient(circle at 75% 25%, hsl(var(--secondary) / 0.35), transparent 45%),
+    radial-gradient(circle at 40% 85%, hsl(var(--accent) / 0.35), transparent 50%);
+  filter: blur(18px);
 }
 
 /* Rich headings */
@@ -54,7 +65,7 @@ h3 {
 
 /* Calm selection */
 ::selection {
-  background: hsl(var(--primary) / 0.35);
+  background: hsl(var(--primary) / 0.28);
 }
 
 /* Subtle scrollbar */
@@ -70,29 +81,224 @@ h3 {
   background: transparent;
 }
 
-/* --- Utility classes for microinteractions & surfaces --- */
+/* --- Microinteraction utilities --- */
 @layer utilities {
   .soft-card {
     border-radius: 28px;
-    background: hsl(var(--card) / 0.7);
+    background: hsl(var(--card) / 0.72);
+    border: 1px solid hsl(var(--border) / 0.35);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 10px 30px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(10px);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .soft-hover {
-    transition: all 200ms ease;
+    transition: transform 180ms ease, box-shadow 220ms ease, background 220ms ease;
   }
 
   .soft-hover:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.05),
+      0 14px 40px rgba(0, 0, 0, 0.07);
   }
 
   .press {
-    transition: transform 160ms ease;
+    transition: transform 140ms ease;
   }
 
   .press:active {
-    transform: scale(0.99);
+    transform: scale(0.985);
   }
+
+  .floaty {
+    animation: floaty 8s ease-in-out infinite;
+  }
+
+  @keyframes floaty {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+  }
+}
+
+/* --- react-big-calendar theme (soft, pastel, calm) --- */
+.rbc-time-view,
+.rbc-time-content,
+.rbc-timeslot-group,
+.rbc-time-header,
+.rbc-time-header-content,
+.rbc-header,
+.rbc-day-slot .rbc-time-slot {
+  border-color: hsl(var(--border) / 0.45) !important;
+}
+
+.rbc-time-content {
+  background: hsl(var(--background) / 0.35);
+}
+
+.rbc-time-gutter,
+.rbc-label {
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+
+.rbc-today {
+  background: hsl(var(--accent) / 0.20) !important;
+}
+
+.rbc-current-time-indicator {
+  background: hsl(var(--primary)) !important;
+  height: 2px !important;
+  opacity: 0.85;
+}
+
+/* Event base style */
+.rbc-event,
+.rbc-day-slot .rbc-event {
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 6px 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 160ms ease, box-shadow 220ms ease;
+}
+
+.rbc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+}
+
+/* Manual events */
+.rbc-manual-event {
+  background: hsl(var(--secondary) / 0.72) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* AI events */
+.rbc-ai-event {
+  background: hsl(var(--primary) / 0.30) !important;
+  outline: 1px solid hsl(var(--primary) / 0.45);
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Selected slot */
+.rbc-slot-selection {
+  background: hsl(var(--primary) / 0.20) !important;
+  border-radius: 12px;
+}
+
+.rbc-event:focus {
+  outline: none !important;
+}
+
+/* --- Shadcn surface polish: inputs/buttons feel pastel + calm --- */
+@layer base {
+  input,
+  textarea,
+  select {
+    border-color: hsl(var(--border) / 0.55);
+    background: hsl(var(--background) / 0.55);
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  /* Softer focus rings */
+  .focus-ring {
+    outline: none !important;
+    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.18) !important;
+  }
+
+  .btn-pill {
+    border-radius: 18px !important;
+  }
+}
+
+/* ================================
+   Calendar calm + spacing polish
+   ================================ */
+
+/* soften the calendar grid */
+.rbc-time-view,
+.rbc-time-content,
+.rbc-timeslot-group,
+.rbc-time-header-content {
+  border-color: hsl(var(--border) / 0.35) !important;
+}
+
+/* reduce visual noise on hour lines */
+.rbc-time-slot {
+  border-top: 1px dashed hsl(var(--border) / 0.18);
+}
+
+/* more vertical breathing room */
+.rbc-timeslot-group {
+  min-height: 56px;
+}
+
+/* soften time gutter */
+.rbc-time-gutter {
+  color: hsl(var(--muted-foreground) / 0.7);
+  font-size: 12px;
+}
+
+/* calendar container feels less boxed */
+.rbc-time-view {
+  background: transparent;
+}
+
+/* ================================
+   Event blocks — hierarchy + air
+   ================================ */
+
+.rbc-event {
+  border-radius: 14px !important;
+  padding: 8px 10px !important;
+  line-height: 1.35;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.rbc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* manual vs AI tone */
+.rbc-manual-event {
+  background: hsl(24 90% 94%) !important; /* peach */
+  color: hsl(24 40% 20%) !important;
+}
+
+.rbc-ai-event {
+  background: hsl(260 90% 96%) !important; /* lavender */
+  color: hsl(260 40% 20%) !important;
+}
+
+/* remove aggressive focus outlines */
+.rbc-event:focus {
+  outline: none;
+}
+
+/* ================================
+   Scrollbars — subtle
+   ================================ */
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--border) / 0.4);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
 }

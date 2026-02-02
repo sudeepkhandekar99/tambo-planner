@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { AppHeader } from "@/components/layout/AppHeader";
-import { FadeIn } from "@/components/motion/FadeIn";
 
 export default function ProtectedLayout({
   children,
@@ -55,12 +53,5 @@ export default function ProtectedLayout({
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <main className="px-6 py-8">
-        <FadeIn>{children}</FadeIn>
-      </main>
-    </div>
-  );
+  return <>{children}</>;
 }

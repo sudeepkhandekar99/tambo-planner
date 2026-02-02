@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Fraunces, DM_Sans } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -19,12 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${dmSans.variable}`}
-    >
+    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
+        <Toaster richColors closeButton />
       </body>
     </html>
   );
